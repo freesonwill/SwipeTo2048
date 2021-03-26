@@ -33,11 +33,11 @@ public class Board {
         if (newGrids.toString() != grids.toString()) {
             grids = newGrids;
             this.addTwoOrFourToGrids();
-            this.drawGrids();
+//            this.drawGrids();
             if (this.isGridsFull() == true && this.isGridsNotMergeable() == true) {
-                colors = THEME.faded;
-                this.drawGrids();
-                this.isShow = true;
+//                colors = THEME.faded;
+//                this.drawGrids();
+//                this.isShow = true;
             }
         }
     }
