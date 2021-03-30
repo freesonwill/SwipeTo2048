@@ -8,10 +8,28 @@ import java.util.List;
 public class Board {
     private int columnCount = 4;
     private int rowCount = 4;
-    private Cell[][] grids = new Cell[rowCount][columnCount];
-    private ObservableField<Integer> currentScores;
+    public ObservableField<Integer> currentScores = new ObservableField<>();
+    public ObservableField<Boolean> isGameOver = new ObservableField<>();
+    public ObservableField<Cell[][]> gridsObservable = new ObservableField<>();
+
+
+    public void init() {
+        Cell[][] grids = gridsObservable.get();
+        for (int i = 0; i < grids.length; i++) {
+            for (int j = 0; j < grids[i].length; j++) {
+                if (grids[i][j] == null) grids[i][j] = new Cell(i, j);
+                grids[i][j].value = 0;
+            }
+        }
+        this.currentScores.set(0);
+        this.addTwoOrFourToGrids();
+        this.addTwoOrFourToGrids();
+        gridsObservable.set(grids);
+    }
+
 
     void addTwoOrFourToGrids() {
+        Cell[][] grids = gridsObservable.get();
         List<Cell> array = new ArrayList<>();
 
         for (int row = 0; row < rowCount; row++) {
@@ -29,8 +47,24 @@ public class Board {
         }
     }
 
-    void swipeGrids(Direction dir) {
-        changeGrids(dir);
+    public void swipeGrids(Direction dir) {
+        this.changeGrids(dir);
+        if (!this.isGridsFull()) {
+            this.addTwoOrFourToGrids();
+            return;
+        }
+        if (this.isGridsNotMergeable()) {
+            gameOver();
+            return;
+        }
+    }
+
+    public void resetGame() {
+        init();
+    }
+
+    void gameOver() {
+        isGameOver.set(true);
     }
 
     void updateCurrentScores(int gridNum) {
@@ -38,6 +72,7 @@ public class Board {
     }
 
     public void changeGrids(Direction direction) {
+        Cell[][] grids = gridsObservable.get();
         if (direction == Direction.LEFT || direction == Direction.RIGHT) {
             final int step = direction == Direction.LEFT ? 1 : -1;
             int y;
@@ -95,10 +130,10 @@ public class Board {
                 }
             }
         }
-
     }
 
     boolean isGridsFull() { //格子是否满了
+        Cell[][] grids = gridsObservable.get();
         for (int row = 0; row < rowCount; row++) {
             for (int column = 0; column < columnCount; column++) {
                 if (grids[row][column].value != 0) {
@@ -110,6 +145,7 @@ public class Board {
     }
 
     boolean isGridsNotMergeable() {//是否可以合并
+        Cell[][] grids = gridsObservable.get();
         for (int row = 0; row < rowCount; row++) {
             for (int column = 0; column < columnCount; column++) {
                 if (column < columnCount - 1) {

@@ -1,10 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <DependentLayout
     xmlns:ohos="http://schemas.huawei.com/res/ohos"
+    xmlns:app="http://schemas.huawei.com/apk/res/ohos"
     ohos:height="match_parent"
     ohos:width="match_parent"
     ohos:background_element="$graphic:background_ability_main"
     >
+
+    <Text
+        ohos:id="$+id:score"
+        ohos:height="50vp"
+        ohos:width="match_content"
+        ohos:auto_font_size="true"
+        ohos:background_element="#ff0000"
+        ohos:horizontal_center="true"
+        ohos:text="总分数：1000"
+        />
+
+    <com.freesonwill.swipeTo2048.view.GridView
+        ohos:id="$+id:grid"
+        ohos:top_margin="20vp"
+        ohos:below="$id:score"
+        ohos:height="match_content"
+        ohos:width="match_content"
+        ohos:background_element="#ff0000"
+        ohos:margin="20vp"
+        app:column="5"
+        app:row="5"
+        />
 
 
 </DependentLayout>

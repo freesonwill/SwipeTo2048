@@ -5,13 +5,19 @@ import java.util.List;
 
 public class ObservableField<T> {
     private T t;
-    private List<OnFieldChangeListener> listeners = new ArrayList<>();
+    private List<OnFieldChangeListener<T>> listeners = new ArrayList<>();
 
     public void set(T t) {
+        set(t, true);
+    }
+
+    public void set(T t, boolean notify) {
         T oldVal = t;
         this.t = t;
-        for (OnFieldChangeListener l : listeners) {
-            l.onDataChange(this, oldVal, t);
+        if (notify) {
+            for (OnFieldChangeListener l : listeners) {
+                l.onDataChange(this, oldVal, t);
+            }
         }
     }
 
@@ -19,11 +25,11 @@ public class ObservableField<T> {
         return t;
     }
 
-    private void addListener(OnFieldChangeListener l) {
+    public void addListener(OnFieldChangeListener<T> l) {
         listeners.add(l);
     }
 
-    public void removeListener(OnFieldChangeListener l) {
+    public void removeListener(OnFieldChangeListener<T> l) {
         listeners.remove(l);
     }
 }
