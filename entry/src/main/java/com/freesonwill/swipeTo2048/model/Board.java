@@ -13,6 +13,7 @@ public class Board {
 
     void addTwoOrFourToGrids() {
         List<Cell> array = new ArrayList<>();
+
         for (int row = 0; row < rowCount; row++) {
             for (int column = 0; column < columnCount; column++) {
                 if (grids[row][column].value == 0) {
@@ -29,24 +30,14 @@ public class Board {
     }
 
     void swipeGrids(Direction dir) {
-        Cell[][] newGrids = this.changeGrids(dir);
-        if (newGrids.toString() != grids.toString()) {
-            grids = newGrids;
-            this.addTwoOrFourToGrids();
-//            this.drawGrids();
-            if (this.isGridsFull() == true && this.isGridsNotMergeable() == true) {
-//                colors = THEME.faded;
-//                this.drawGrids();
-//                this.isShow = true;
-            }
-        }
+        changeGrids(dir);
     }
 
     void updateCurrentScores(int gridNum) {
         this.currentScores.set(currentScores.get() + gridNum);
     }
 
-    public Cell[][] changeGrids(Direction direction) {
+    public void changeGrids(Direction direction) {
         if (direction == Direction.LEFT || direction == Direction.RIGHT) {
             final int step = direction == Direction.LEFT ? 1 : -1;
             int y;
@@ -104,23 +95,21 @@ public class Board {
                 }
             }
         }
-        return grids;
 
     }
 
-    boolean isGridsFull() {
-        int count = 0;
+    boolean isGridsFull() { //格子是否满了
         for (int row = 0; row < rowCount; row++) {
             for (int column = 0; column < columnCount; column++) {
                 if (grids[row][column].value != 0) {
-                    count++;
+                    return false;
                 }
             }
         }
-        return count == rowCount * columnCount;
+        return true;
     }
 
-    boolean isGridsNotMergeable() {
+    boolean isGridsNotMergeable() {//是否可以合并
         for (int row = 0; row < rowCount; row++) {
             for (int column = 0; column < columnCount; column++) {
                 if (column < columnCount - 1) {

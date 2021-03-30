@@ -26,7 +26,6 @@ public class CellView extends Component implements Component.DrawTask, Component
 
     @Override
     public void onDraw(Component component, Canvas canvas) {
-
     }
 
     @Override
