@@ -9,7 +9,7 @@ import com.freesonwill.swipeTo2048.view.base.IGridView;
 import ohos.aafwk.ability.AbilitySlice;
 import ohos.aafwk.content.Intent;
 
-public class MainAbilitySlice extends AbilitySlice implements IGridView {
+public class MainAbilitySlice extends AbilitySlice {
     private GridPresenter presenter;
     private GridView cellView;
 
@@ -17,10 +17,12 @@ public class MainAbilitySlice extends AbilitySlice implements IGridView {
     public void onStart(Intent intent) {
         super.onStart(intent);
         super.setUIContent(ResourceTable.Layout_ability_main);
+        presenter = new GridPresenter(cellView.getRow(), cellView.getColumn());
         cellView = (GridView) findComponentById(ResourceTable.Id_grid);
-        presenter = new GridPresenter();
-        presenter.attachView(this);
+        cellView.setPresenter(presenter);
         cellView.loadColorJson();
+        cellView.refreshGrids(presenter.getCells());
+        presenter.attachView(cellView);
     }
 
     @Override
@@ -31,26 +33,6 @@ public class MainAbilitySlice extends AbilitySlice implements IGridView {
     @Override
     public void onForeground(Intent intent) {
         super.onForeground(intent);
-    }
-
-    @Override
-    public void setScore(int score) {
-
-    }
-
-    @Override
-    public void showGameOver() {
-
-    }
-
-    @Override
-    public void refreshGrids(Cell[][] cells) {
-        cellView.refreshGrids(cells);
-    }
-
-    @Override
-    public void swipeGrids(Direction dir) {
-        presenter.swipeGrids(dir);
     }
 
     @Override

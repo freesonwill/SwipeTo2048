@@ -1,20 +1,32 @@
 package com.freesonwill.swipeTo2048.model;
 
 import com.freesonwill.swipeTo2048.model.observable.ObservableField;
+import ohos.abilityshell.HarmonyApplication;
+import ohos.app.dispatcher.TaskDispatcher;
+import ohos.app.dispatcher.task.TaskPriority;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class Board {
-    private int columnCount = 4;
-    private int rowCount = 4;
+    private final int columnCount;
+    private final int rowCount;
     public ObservableField<Integer> currentScores = new ObservableField<>();
     public ObservableField<Boolean> isGameOver = new ObservableField<>();
     public ObservableField<Cell[][]> gridsObservable = new ObservableField<>();
 
+    public Board(int rowCount, int columnCount) {
+        this.columnCount = columnCount;
+        this.rowCount = rowCount;
+        init();
+    }
 
     public void init() {
         Cell[][] grids = gridsObservable.get();
+        if (grids == null) {
+            grids = new Cell[rowCount][columnCount];
+            gridsObservable.set(grids, false);
+        }
         for (int i = 0; i < grids.length; i++) {
             for (int j = 0; j < grids[i].length; j++) {
                 if (grids[i][j] == null) grids[i][j] = new Cell(i, j);
@@ -24,7 +36,7 @@ public class Board {
         this.currentScores.set(0);
         this.addTwoOrFourToGrids();
         this.addTwoOrFourToGrids();
-        gridsObservable.set(grids);
+        gridsObservable.set(grids, true);
     }
 
 
@@ -72,6 +84,7 @@ public class Board {
 
     public void changeGrids(Direction direction) {
         Cell[][] grids = gridsObservable.get();
+        boolean changed = false;
         if (direction == Direction.LEFT || direction == Direction.RIGHT) {
             final int step = direction == Direction.LEFT ? 1 : -1;
             int y;
@@ -90,6 +103,7 @@ public class Board {
                         this.updateCurrentScores(array.get(i).value);
                         array.get(i + 1).value = 0;
                         i++;
+                        changed = true;
                     }
                 }
                 int column = direction == Direction.LEFT ? 0 : columnCount - 1;
@@ -97,6 +111,7 @@ public class Board {
                     if (a.value != 0) {
                         grids[row][column].value = a.value;
                         column += step;
+                        changed = true;
                     }
                 }
             }
@@ -112,12 +127,13 @@ public class Board {
                     }
                     x += step;
                 }
-                for (int i = 0; i < array.size(); i++) {
+                for (int i = 0; i < array.size() - 1; i++) {
                     if (array.get(i).value == array.get(i + 1).value) {
                         array.get(i).value += array.get(i + 1).value;
                         this.updateCurrentScores(array.get(i).value);
                         array.get(i + 1).value = 0;
                         i++;
+                        changed = true;
                     }
                 }
                 x = direction == Direction.UP ? 0 : rowCount - 1;
@@ -125,10 +141,12 @@ public class Board {
                     if (elem.value != 0) {
                         grids[x][column].value = elem.value;
                         x += step;
+                        changed = true;
                     }
                 }
             }
         }
+        if(changed) gridsObservable.set(grids);
     }
 
     boolean isGridsFull() {

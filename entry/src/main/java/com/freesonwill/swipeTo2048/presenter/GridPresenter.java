@@ -10,8 +10,8 @@ import com.freesonwill.swipeTo2048.view.base.IGridView;
 public class GridPresenter extends BasePresenter<IGridView> {
     private Board board;
 
-    public GridPresenter() {
-        board = new Board();
+    public GridPresenter(int row, int column) {
+        board = new Board(row, column);
         board.currentScores.addListener(new OnFieldChangeListener<Integer>() {
             @Override
             public void onDataChange(ObservableField<Integer> field, Integer oldVal, Integer newVal) {
@@ -42,4 +42,11 @@ public class GridPresenter extends BasePresenter<IGridView> {
         board.resetGame();
     }
 
+    public Cell[][] getCells() {
+        return board.gridsObservable.get();
+    }
+
+    public boolean isGameOver() {
+        return board.isGameOver.get();
+    }
 }

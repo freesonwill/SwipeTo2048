@@ -8,5 +8,4 @@ public interface IGridView extends IView {
     void showGameOver();
     void refreshGrids(Cell[][] cells);
     void swipeGrids(Direction dir);
-
 }
