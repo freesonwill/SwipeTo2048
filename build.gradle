@@ -4,7 +4,8 @@ apply plugin: 'com.huawei.ohos.app'
 ohos {
     compileSdkVersion 4
     defaultConfig {
-        compatibleSdkVersion 4
+        compatibleSdkVersion 3
+
     }
 }
 	

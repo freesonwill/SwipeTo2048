@@ -9,24 +9,27 @@ import ohos.agp.components.Component;
 import ohos.agp.render.Canvas;
 import ohos.agp.utils.Point;
 import ohos.app.Context;
+import ohos.global.resource.RawFileEntry;
 import ohos.global.resource.Resource;
 import ohos.global.resource.ResourceManager;
+import ohos.hiviewdfx.HiLog;
+import ohos.hiviewdfx.HiLogLabel;
+import ohos.multimodalinput.event.MmiPoint;
 import ohos.multimodalinput.event.TouchEvent;
-import ohos.utils.zson.ZSONObject;
 import ohos.utils.zson.ZSONReader;
 import ohos.utils.zson.ZSONType;
-public class GridView extends Component implements Component.DrawTask, Component.TouchEventListener {
-import java.io.*;
-import java.util.ArrayList;
+
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-    private static final HiLogLabel LABEL = new HiLogLabel(HiLog.LOG_APP, 0x00201, "GridView");
+
 public class GridView extends Component implements Component.DrawTask
         , Component.TouchEventListener, Component.EstimateSizeListener {
     private int column = 1, row = 1;
     private MmiPoint downPosition, upPostion;
     private IGridView delegate;
+    private static final HiLogLabel LABEL = new HiLogLabel(HiLog.LOG_APP, 0x00201, "GridView");
 
     public GridView(Context context, AttrSet attrSet) {
         super(context, attrSet);
@@ -41,7 +44,7 @@ public class GridView extends Component implements Component.DrawTask
 
     @Override
     public void onDraw(Component component, Canvas canvas) {
-        HiLog.debug(LABEL,"");
+        HiLog.debug(LABEL, "");
 
     }
 
@@ -63,7 +66,7 @@ public class GridView extends Component implements Component.DrawTask
                 }
                 break;
         }
-
+        return true;
     }
 
     @Override
@@ -87,8 +90,6 @@ public class GridView extends Component implements Component.DrawTask
     }
 
     public void refreshGrids(Cell[][] cells) {
-
-
         invalidate();
     }
 
@@ -97,35 +98,22 @@ public class GridView extends Component implements Component.DrawTask
         RawFileEntry rawFileEntry = resourceManager.getRawFileEntry("resources/rawfile/cell_color.json");
         try (Resource resource = rawFileEntry.openRawFile()) {
             try (ZSONReader r = new ZSONReader(new InputStreamReader(resource))) {
-
                 Map<String, Object> map = new HashMap<>();
                 ZSONType type = r.peek();
-                if (type == ZSONType.OBJECT) {
-                    String name = r.readName();
-                    r.startObject();
-                    ZSONType type2=  r.peek();
-                    System.out.println("type2-->" + type2);
-
-                    r.endObject();
+                System.out.println("type-->" + type);
+                switch (type){
+                    case NAME:
+                        System.out.println("NAME-->" + r.readName());
+                        break;
+                    case STRING:
+                        System.out.println("STRING-->" + r.readString());
+                        break;
+                    case OBJECT:
+                        System.out.println("OBJECT-->");
+                        break;
                 }
-//                while (r.hasNext()) {
-//                    String filedName = r.readName();
-//                    System.out.println("filedName-->" + filedName);
-//
-//                    r.startObject();
-//                    Map<String, Object> m = new HashMap<>();
-//                    while (r.hasNext()) {
-//                        String filedName2 = r.readName();
-//                        System.out.println("r.readName()-->" + filedName2);
-//                        m.put(filedName2, r.readString());
-//                    }
-//                    r.endObject();
-//
-//                    map.put(filedName, m);
-//
-//                }
-//                r.endObject();
-                System.out.println("map-->" + map);
+
+
             }
         } catch (IOException e) {
             e.printStackTrace();
