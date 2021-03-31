@@ -11,9 +11,9 @@ import java.util.List;
 public class Board {
     private final int columnCount;
     private final int rowCount;
-    public ObservableField<Integer> currentScores = new ObservableField<>();
-    public ObservableField<Boolean> isGameOver = new ObservableField<>();
-    public ObservableField<Cell[][]> gridsObservable = new ObservableField<>();
+    public ObservableField<Integer> currentScores = new ObservableField<>(0);
+    public ObservableField<Boolean> isGameOver = new ObservableField<>(false);
+    public ObservableField<Cell[][]> gridsObservable = new ObservableField<>(null);
 
     public Board(int rowCount, int columnCount) {
         this.columnCount = columnCount;
@@ -43,6 +43,7 @@ public class Board {
     void addTwoOrFourToGrids() {
         Cell[][] grids = gridsObservable.get();
         List<Cell> array = new ArrayList<>();
+
         for (int row = 0; row < rowCount; row++) {
             for (int column = 0; column < columnCount; column++) {
                 if (grids[row][column].value == 0) {
@@ -149,7 +150,7 @@ public class Board {
         if(changed) gridsObservable.set(grids);
     }
 
-    boolean isGridsFull() {
+    boolean isGridsFull() { //格子是否满了
         Cell[][] grids = gridsObservable.get();
         for (int row = 0; row < rowCount; row++) {
             for (int column = 0; column < columnCount; column++) {
@@ -161,7 +162,7 @@ public class Board {
         return true;
     }
 
-    boolean isGridsNotMergeable() {
+    boolean isGridsNotMergeable() {//是否可以合并
         Cell[][] grids = gridsObservable.get();
         for (int row = 0; row < rowCount; row++) {
             for (int column = 0; column < columnCount; column++) {

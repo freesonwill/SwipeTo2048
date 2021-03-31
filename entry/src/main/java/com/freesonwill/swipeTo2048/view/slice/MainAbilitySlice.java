@@ -17,12 +17,12 @@ public class MainAbilitySlice extends AbilitySlice {
     public void onStart(Intent intent) {
         super.onStart(intent);
         super.setUIContent(ResourceTable.Layout_ability_main);
-        presenter = new GridPresenter(cellView.getRow(), cellView.getColumn());
         cellView = (GridView) findComponentById(ResourceTable.Id_grid);
+        presenter = new GridPresenter(cellView.getRow(), cellView.getColumn());
+        presenter.attachView(cellView);
         cellView.setPresenter(presenter);
         cellView.loadColorJson();
         cellView.refreshGrids(presenter.getCells());
-        presenter.attachView(cellView);
     }
 
     @Override

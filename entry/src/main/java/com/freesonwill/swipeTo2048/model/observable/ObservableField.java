@@ -7,6 +7,10 @@ public class ObservableField<T> {
     private T t;
     private List<OnFieldChangeListener<T>> listeners = new ArrayList<>();
 
+    public ObservableField(T t){
+        this.t = t;
+    }
+
     public void set(T t) {
         set(t, true);
     }

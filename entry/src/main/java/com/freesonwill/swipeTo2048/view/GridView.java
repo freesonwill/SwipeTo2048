@@ -1,3 +1,4 @@
+
 package com.freesonwill.swipeTo2048.view;
 
 import com.freesonwill.swipeTo2048.common.Utils;
@@ -189,5 +190,4 @@ public class GridView extends Component implements
         });
         //System.out.println("colorMaps-->");
     }
-
 }
