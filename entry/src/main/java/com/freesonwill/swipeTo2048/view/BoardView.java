@@ -61,6 +61,13 @@ public class BoardView extends Component implements
         addDrawTask(drawTask);
         setEstimateSizeListener(this);
         setTouchEventListener(this);
+
+        Point size = Utils.getScreenSize(getContext());
+        float W = (size.getPointX() - getMarginLeft() - getMarginRight() - getPaddingLeft() - getPaddingRight());
+        float H = (size.getPointY() - 350 * 2 - getMarginTop() - getMarginBottom() - getPaddingTop() - getPaddingBottom());
+        int cellSize = (int) Math.min(W / column, H / row);
+        row = (int) (H / cellSize);
+        column = (int) (W / cellSize);
     }
 
     public int getColumn() {
@@ -70,7 +77,6 @@ public class BoardView extends Component implements
     public int getRow() {
         return row;
     }
-
 
     @Override
     public boolean onTouchEvent(Component component, TouchEvent touchEvent) {
@@ -105,16 +111,10 @@ public class BoardView extends Component implements
         if (getComponentParent() == null) return false;
         Point size = Utils.getScreenSize(getContext());
         float W = (size.getPointX() - getMarginLeft() - getMarginRight() - getPaddingLeft() - getPaddingRight());
-        float H = (size.getPointY() - getMarginTop() - getMarginBottom() - getPaddingTop() - getPaddingBottom());
+        float H = (size.getPointY() - 350 * 2 - getMarginTop() - getMarginBottom() - getPaddingTop() - getPaddingBottom());
         int cellSize = (int) Math.min(W / column, H / row);
         int w2 = cellSize * column;
         int h2 = cellSize * row;
-        System.out.println(String.format("onEstimateSize-->%f,%f,%d,%d,%d,%d",
-                size.getPointX(), size.getPointY(),
-                getPaddingLeft(), getPaddingRight(),
-                w2, h2
-                )
-        );
         setEstimatedSize(
                 EstimateSpec.getSizeWithMode(w2, EstimateSpec.NOT_EXCEED),
                 EstimateSpec.getSizeWithMode(h2, EstimateSpec.NOT_EXCEED));

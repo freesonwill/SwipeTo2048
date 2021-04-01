@@ -4,15 +4,14 @@ ohos {
     defaultConfig {
         compatibleSdkVersion 3
     }
-
 //    signingConfigs {
 //        release {
 //            storeFile file('E:/Harmony/Profile/harmony.p12')
-//            storePassword '0000001C94CB57015D7628B3577179BA5FA88B03FF79E59B9D6D7F62974F9BB648B7D7773F6DE951CB373A5A'
+//            storePassword 'hongmong2021'
 //            keyAlias 'harmony'
-//            keyPassword '0000001C61B3362515436A50BFA80DBF6B1C11D7A966D289328C3E85CC8867C16AD47FF0924939BD45C4FDB4'
+//            keyPassword 'hongmong2021'
 //            signAlg 'SHA256withECDSA'
-//            profile file('E:/Harmony/Profile/ProvisionDebugDebug.p7b')
+//            profile file('E:/Harmony/Profile/harmony-release.p7b')
 //            certpath file('E:/Harmony/Profile/harmony.cer')
 //        }
 //    }

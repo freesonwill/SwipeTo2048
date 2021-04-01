@@ -48,9 +48,9 @@
         ohos:id="$+id:reset"
         ohos:height="match_content"
         ohos:width="match_content"
+        ohos:align_parent_bottom="true"
         ohos:background_element="$graphic:selector_button"
-        ohos:below="$id:board"
-        ohos:bottom_margin="10vp"
+        ohos:bottom_margin="50vp"
         ohos:bottom_padding="10vp"
         ohos:horizontal_center="true"
         ohos:left_padding="20vp"
@@ -58,8 +58,9 @@
         ohos:text="重玩"
         ohos:text_color="#ffffff"
         ohos:text_size="30fp"
-        ohos:top_margin="10vp"
+        ohos:top_margin="20vp"
         ohos:top_padding="10vp"
         />
+
 
 </DependentLayout>

@@ -17,7 +17,7 @@
     "package": "com.freesonwill.swipeTo2048",
     "name": ".view.MyApplication",
     "deviceType": [
-      "phone"
+      "phone","tablet"
     ],
     "distro": {
       "deliveryWithInstall": true,
