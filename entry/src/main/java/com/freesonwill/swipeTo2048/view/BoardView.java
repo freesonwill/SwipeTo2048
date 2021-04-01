@@ -7,9 +7,12 @@ import com.freesonwill.swipeTo2048.model.Direction;
 import com.freesonwill.swipeTo2048.presenter.BoardPresenter;
 import ohos.agp.components.AttrSet;
 import ohos.agp.components.Component;
+import ohos.agp.components.ComponentContainer;
+import ohos.agp.components.ComponentParent;
 import ohos.agp.render.Canvas;
 import ohos.agp.render.Paint;
 import ohos.agp.utils.Color;
+import ohos.agp.utils.DimensFloat;
 import ohos.agp.utils.Point;
 import ohos.agp.utils.Rect;
 import ohos.app.Context;
@@ -23,7 +26,6 @@ import ohos.hiviewdfx.HiLog;
 import ohos.hiviewdfx.HiLogLabel;
 import ohos.multimodalinput.event.MmiPoint;
 import ohos.multimodalinput.event.TouchEvent;
-import ohos.multimodalinput.standard.TouchEventHandle;
 import ohos.utils.zson.ZSONReader;
 
 import java.io.*;
@@ -35,7 +37,7 @@ public class BoardView extends Component implements
     private static final HiLogLabel LABEL = new HiLogLabel(HiLog.LOG_APP, 0x00201,
             "BoardView");
     private int column = 5, row = 5;
-    private int cellSpacing = 5;
+    private float cellSpacing = 0;
     private MmiPoint downPosition, upPosition;
     private Map<String, Object> colorMaps;
     private MyDrawTask drawTask;
@@ -52,6 +54,11 @@ public class BoardView extends Component implements
             column = attrSet.getAttr("column").get().getIntegerValue();
         if (attrSet.getAttr("row").isPresent())
             row = attrSet.getAttr("row").get().getIntegerValue();
+        if (attrSet.getAttr("cellSpacing").isPresent()) {
+            cellSpacing = attrSet.getAttr("cellSpacing").get().getDimensionValue();
+        }
+        drawTask = new MyDrawTask();
+        addDrawTask(drawTask);
         setEstimateSizeListener(this);
         setTouchEventListener(this);
     }
@@ -77,7 +84,7 @@ public class BoardView extends Component implements
                 upPosition = touchEvent.getPointerPosition(0);
                 float moveX = upPosition.getX() - downPosition.getX();
                 float moveY = upPosition.getY() - downPosition.getY();
-                System.out.println(String.format("you just click,%f,%f,%d",moveX,moveY,
+                System.out.println(String.format("you just click,%f,%f,%d", moveX, moveY,
                         touchEvent.getAction()));
                 if (Math.abs(moveX) < 10 && Math.abs(moveY) < 10) {
                     return true;
@@ -95,29 +102,30 @@ public class BoardView extends Component implements
 
     @Override
     public boolean onEstimateSize(int widthEstimateConfig, int heightEstimateConfig) {
+        if (getComponentParent() == null) return false;
         Point size = Utils.getScreenSize(getContext());
         float W = (size.getPointX() - getMarginLeft() - getMarginRight() - getPaddingLeft() - getPaddingRight());
         float H = (size.getPointY() - getMarginTop() - getMarginBottom() - getPaddingTop() - getPaddingBottom());
-        int cellSize = (int) Math.min(W, H);
+        int cellSize = (int) Math.min(W / column, H / row);
+        int w2 = cellSize * column;
+        int h2 = cellSize * row;
+        System.out.println(String.format("onEstimateSize-->%f,%f,%d,%d,%d,%d",
+                size.getPointX(), size.getPointY(),
+                getPaddingLeft(), getPaddingRight(),
+                w2, h2
+                )
+        );
         setEstimatedSize(
-                EstimateSpec.getSizeWithMode(cellSize, EstimateSpec.PRECISE),
-                EstimateSpec.getSizeWithMode(cellSize, EstimateSpec.PRECISE));
+                EstimateSpec.getSizeWithMode(w2, EstimateSpec.NOT_EXCEED),
+                EstimateSpec.getSizeWithMode(h2, EstimateSpec.NOT_EXCEED));
         return true;
     }
 
 
     public void refreshBoard(Cell[][] cells) {
-        System.out.println("refreshBoard-->cells");
-        if (drawTask == null) {
-            drawTask = new MyDrawTask();
-            addDrawTask(drawTask);
-        }
+        //System.out.println("refreshBoard-->cells");
         drawTask.cells = cells;
         invalidate();
-    }
-
-    public void swipeBoard(Direction dir) {
-        presenter.swipeBoard(dir);
     }
 
     private class MyDrawTask implements DrawTask {
@@ -127,15 +135,15 @@ public class BoardView extends Component implements
         @Override
         public void onDraw(Component component, Canvas canvas) {
             Cell[][] cells = this.cells;
-//            System.out.println(Cell.getCellsString(cells));
             int w = component.getWidth();
+            int h = component.getHeight();
             int paddingT = component.getPaddingTop();
             int paddingB = component.getPaddingBottom();
             int paddingL = component.getPaddingLeft();
             int paddingR = component.getPaddingRight();
             float cellW = 1f * (w - paddingL - paddingR - cellSpacing * (column - 1)) / column;
-            float x = paddingL, y = paddingT;
-            System.out.println("cellW-->" + cellW);
+            float x, y;
+            System.out.println(String.format("w-->%d,%d,%d,%d,%d,%d", w, h, paddingT, paddingB, paddingL, paddingR));
             for (int i = 0; i < cells.length; i++) {
                 for (int j = 0; j < cells[i].length; j++) {
                     Cell cell = cells[i][j];
@@ -143,14 +151,20 @@ public class BoardView extends Component implements
                     y = paddingT + cellW * i + cellSpacing * i;
                     paint.reset();
                     paint.setStyle(Paint.Style.FILL_STYLE);
-                    paint.setColor(new Color(Color.getIntColor("#BBADA0")));
+                    String txt = String.valueOf(cell.getValue());
+                    Color color = getNumColor(presenter.isGameOver(), txt);
+                    paint.setColor(color);
                     canvas.drawRect(x, y, x + cellW, y + cellW, paint);
                     if (cell.getValue() != 0) {
                         paint.reset();
                         paint.setTextSize((int) (cellW * 0.6f));
-                        String txt = String.valueOf(cell.getValue());
-                        paint.setColor(getNumColor(presenter.isGameOver(), txt));
-                        System.out.println("Color-->" + cell.getValue());
+                        Color color2;
+                        if (txt.equals("2") || txt.equals("4")) {
+                            color2 = getNumColor(presenter.isGameOver(), "2or4");
+                        } else {
+                            color2 = getNumColor(presenter.isGameOver(), "others");
+                        }
+                        paint.setColor(color2);
                         Rect rect = paint.getTextBounds(txt);
                         int[] wh = rect.getRectSize();
                         canvas.drawText(paint,
@@ -167,7 +181,7 @@ public class BoardView extends Component implements
     private Color getNumColor(boolean isGameOver, String txt) {
         Map<String, String> map = (Map<String, String>) colorMaps.get(!isGameOver ? "normal" : "faded");
         String colorStr = map.get(txt);
-        System.out.println("colorStr-->" + colorStr);
+        //System.out.println("colorStr-->" + colorStr);
         return new Color(Color.getIntColor(colorStr));
     }
 

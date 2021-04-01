@@ -73,11 +73,12 @@ public class Board {
     }
 
     void gameOver() {
+        System.out.println("gameOver");
         isGameOver.set(true);
     }
 
     void updateCurrentScores(int score) {
-        this.currentScores.set(currentScores.get() + score);
+        this.currentScores.set(score);
     }
 
     public void changeBoard(Direction direction) {
@@ -156,7 +157,7 @@ public class Board {
         Cell[][] Board = boardObservable.get();
         for (int row = 0; row < rowCount; row++) {
             for (int column = 0; column < columnCount; column++) {
-                if (Board[row][column].value != 0) {
+                if (Board[row][column].value == 0) {
                     return false;
                 }
             }

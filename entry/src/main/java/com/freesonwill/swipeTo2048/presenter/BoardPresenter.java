@@ -49,4 +49,7 @@ public class BoardPresenter extends BasePresenter<IBoardView> {
     public boolean isGameOver() {
         return board.isGameOver.get();
     }
+    public int getScore(){
+        return board.currentScores.get();
+    }
 }

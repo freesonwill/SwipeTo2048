@@ -8,10 +8,22 @@
     >
 
     <Text
+        ohos:id="$+id:highest_score"
+        ohos:height="50vp"
+        ohos:width="match_content"
+        ohos:auto_font_size="true"
+        ohos:horizontal_center="true"
+        ohos:text="最高纪录：0"
+        ohos:text_color="#00ff00"
+        ohos:top_margin="10vp"
+        />
+
+    <Text
         ohos:id="$+id:score"
         ohos:height="50vp"
         ohos:width="match_content"
         ohos:auto_font_size="true"
+        ohos:below="$id:highest_score"
         ohos:horizontal_center="true"
         ohos:text="总分数：0"
         ohos:text_color="#ff0000"
@@ -23,10 +35,13 @@
         ohos:width="match_content"
         ohos:background_element="#BBADA0"
         ohos:below="$id:score"
-        ohos:margin="20vp"
+        ohos:left_margin="20vp"
+        ohos:padding="10vp"
+        ohos:right_margin="20vp"
         ohos:top_margin="20vp"
+        app:cellSpacing="10vp"
         app:column="5"
-        app:row="5"
+        app:row="7"
         />
 
     <Button
@@ -35,9 +50,16 @@
         ohos:width="match_content"
         ohos:background_element="$graphic:selector_button"
         ohos:below="$id:board"
-        ohos:text="重玩"
-        ohos:text_size="50fp"
+        ohos:bottom_margin="10vp"
+        ohos:bottom_padding="10vp"
         ohos:horizontal_center="true"
-        ohos:top_margin="20vp"/>
+        ohos:left_padding="20vp"
+        ohos:right_padding="20vp"
+        ohos:text="重玩"
+        ohos:text_color="#ffffff"
+        ohos:text_size="30fp"
+        ohos:top_margin="10vp"
+        ohos:top_padding="10vp"
+        />
 
 </DependentLayout>
