@@ -65,11 +65,6 @@ public class MainAbilitySlice extends AbilitySlice implements IBoardView {
     }
 
     @Override
-    public void swipeBoard(Direction dir) {
-        cellView.swipeBoard(dir);
-    }
-
-    @Override
     public void setScore(int score) {
         scoreView.setText(String.format("总分数：%d", score));
     }

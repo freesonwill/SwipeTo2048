@@ -15,7 +15,7 @@ public class BoardPresenter extends BasePresenter<IBoardView> {
         board.currentScores.addListener(new OnFieldChangeListener<Integer>() {
             @Override
             public void onDataChange(ObservableField<Integer> field, Integer oldVal, Integer newVal) {
-                //getView().setScore(newVal);
+                getView().setScore(newVal);
             }
         });
         board.isGameOver.addListener(new OnFieldChangeListener<Boolean>() {

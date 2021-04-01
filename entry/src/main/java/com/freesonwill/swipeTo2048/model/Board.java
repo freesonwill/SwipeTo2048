@@ -13,8 +13,8 @@ public class Board {
     public ObservableField<Cell[][]> boardObservable = new ObservableField<>(null);
 
     public Board(int rowCount, int columnCount) {
-        this.columnCount = columnCount;
         this.rowCount = rowCount;
+        this.columnCount = columnCount;
         init();
     }
 
@@ -86,12 +86,15 @@ public class Board {
         boolean changed = false;
         if (direction == Direction.LEFT || direction == Direction.RIGHT) {
             final int step = direction == Direction.LEFT ? 1 : -1;
-            int y = direction == Direction.LEFT ? 0 : columnCount - 1;
+            int y;
+            //System.out.println("before-->" + Cell.getCellsString(board));
             for (int row = 0; row < rowCount; row++) {
                 List<Cell> array = new ArrayList<>();
+                y = direction == Direction.LEFT ? 0 : columnCount - 1;
                 for (int i = 0; i < columnCount; i++) {
-                    if (board[row][i].value != 0) {
-                        array.add(board[row][y]);
+                    if (board[row][y].value != 0) {
+                        array.add(board[row][y].clone());
+                        board[row][y].value = 0;
                     }
                     y += step;
                 }
@@ -105,26 +108,25 @@ public class Board {
                     }
                 }
                 int column = direction == Direction.LEFT ? 0 : columnCount - 1;
-                System.out.println("before-->" + Cell.getCellsString(board));
                 for (Cell a : array) {
                     if (a.value != 0) {
                         board[row][column].value = a.value;
-                        a.value = 0;
                         column += step;
                         changed = true;
                     }
                 }
-                System.out.println("end-->" + Cell.getCellsString(board));
             }
+//            System.out.println("end-->" + Cell.getCellsString(board));
         } else if (direction == Direction.UP || direction == Direction.DOWN) {
             final int step = direction == Direction.UP ? 1 : -1;
             int x;
             for (int column = 0; column < columnCount; column++) {
                 List<Cell> array = new ArrayList<>();
                 x = direction == Direction.UP ? 0 : rowCount - 1;
-                for (int i = 0; i < columnCount; i++) {
+                for (int i = 0; i < rowCount; i++) {
                     if (board[x][column].value != 0) {
-                        array.add(board[x][column]);
+                        array.add(board[x][column].clone());
+                        board[x][column].value = 0;
                     }
                     x += step;
                 }
@@ -141,7 +143,6 @@ public class Board {
                 for (Cell a : array) {
                     if (a.value != 0) {
                         board[x][column].value = a.value;
-                        a.value = 0;
                         x += step;
                         changed = true;
                     }

@@ -35,4 +35,10 @@ public class Cell {
         }
         return builder.toString();
     }
+
+    protected Cell clone() {
+        Cell copy = new Cell(x, y);
+        copy.value = this.value;
+        return copy;
+    }
 }

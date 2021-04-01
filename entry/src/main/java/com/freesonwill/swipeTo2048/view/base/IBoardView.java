@@ -6,6 +6,5 @@ import com.freesonwill.swipeTo2048.model.Direction;
 public interface IBoardView extends IView {
     void showGameOver();
     void refreshBoard(Cell[][] cells);
-    void swipeBoard(Direction dir);
     void setScore(int score);
 }

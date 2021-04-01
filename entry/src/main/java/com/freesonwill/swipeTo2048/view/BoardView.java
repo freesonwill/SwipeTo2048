@@ -23,6 +23,7 @@ import ohos.hiviewdfx.HiLog;
 import ohos.hiviewdfx.HiLogLabel;
 import ohos.multimodalinput.event.MmiPoint;
 import ohos.multimodalinput.event.TouchEvent;
+import ohos.multimodalinput.standard.TouchEventHandle;
 import ohos.utils.zson.ZSONReader;
 
 import java.io.*;
@@ -66,7 +67,7 @@ public class BoardView extends Component implements
 
     @Override
     public boolean onTouchEvent(Component component, TouchEvent touchEvent) {
-        if (touchEvent.getPointerCount() > 1) return false;
+        if (touchEvent.getPointerCount() > 1) return true;
         switch (touchEvent.getAction()) {
             case TouchEvent.PRIMARY_POINT_DOWN:
                 downPosition = touchEvent.getPointerPosition(0);
@@ -76,7 +77,8 @@ public class BoardView extends Component implements
                 upPosition = touchEvent.getPointerPosition(0);
                 float moveX = upPosition.getX() - downPosition.getX();
                 float moveY = upPosition.getY() - downPosition.getY();
-                //System.out.println(String.format("you just click,%f,%f",moveX,moveY));
+                System.out.println(String.format("you just click,%f,%f,%d",moveX,moveY,
+                        touchEvent.getAction()));
                 if (Math.abs(moveX) < 10 && Math.abs(moveY) < 10) {
                     return true;
                 }
@@ -125,7 +127,7 @@ public class BoardView extends Component implements
         @Override
         public void onDraw(Component component, Canvas canvas) {
             Cell[][] cells = this.cells;
-            System.out.println(Cell.getCellsString(cells));
+//            System.out.println(Cell.getCellsString(cells));
             int w = component.getWidth();
             int paddingT = component.getPaddingTop();
             int paddingB = component.getPaddingBottom();
@@ -137,11 +139,11 @@ public class BoardView extends Component implements
             for (int i = 0; i < cells.length; i++) {
                 for (int j = 0; j < cells[i].length; j++) {
                     Cell cell = cells[i][j];
-                    x = paddingL + cellW * i + cellSpacing * i;
-                    y = paddingT + cellW * j + cellSpacing * j;
+                    x = paddingL + cellW * j + cellSpacing * j;
+                    y = paddingT + cellW * i + cellSpacing * i;
                     paint.reset();
                     paint.setStyle(Paint.Style.FILL_STYLE);
-                    paint.setColor(Color.GREEN);
+                    paint.setColor(new Color(Color.getIntColor("#BBADA0")));
                     canvas.drawRect(x, y, x + cellW, y + cellW, paint);
                     if (cell.getValue() != 0) {
                         paint.reset();
