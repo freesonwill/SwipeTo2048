@@ -22,5 +22,17 @@ public class Cell {
 
     protected int value;
 
-
+    public static String getCellsString(Cell[][] cells) {
+        StringBuilder builder = new StringBuilder();
+        for (int i = 0; i < cells.length; i++) {
+            for (int j = 0; j < cells[i].length; j++) {
+                if (cells[i][j].getValue() == 0) continue;
+                if (builder.length() > 0) builder.append(",");
+                builder.append("[").append(i).append(",").append(j)
+                        .append(":").append(cells[i][j].getValue())
+                        .append("]");
+            }
+        }
+        return builder.toString();
+    }
 }

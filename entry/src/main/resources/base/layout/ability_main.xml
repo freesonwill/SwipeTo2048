@@ -12,22 +12,32 @@
         ohos:height="50vp"
         ohos:width="match_content"
         ohos:auto_font_size="true"
-        ohos:text_color="#ff0000"
         ohos:horizontal_center="true"
-        ohos:text="总分数：1000"
+        ohos:text="总分数：0"
+        ohos:text_color="#ff0000"
         />
 
-    <com.freesonwill.swipeTo2048.view.GridView
-        ohos:id="$+id:grid"
-        ohos:top_margin="20vp"
-        ohos:below="$id:score"
+    <com.freesonwill.swipeTo2048.view.BoardView
+        ohos:id="$+id:board"
         ohos:height="match_content"
         ohos:width="match_content"
         ohos:background_element="#BBADA0"
+        ohos:below="$id:score"
         ohos:margin="20vp"
+        ohos:top_margin="20vp"
         app:column="5"
         app:row="5"
         />
 
+    <Button
+        ohos:id="$+id:reset"
+        ohos:height="match_content"
+        ohos:width="match_content"
+        ohos:background_element="$graphic:selector_button"
+        ohos:below="$id:board"
+        ohos:text="重玩"
+        ohos:text_size="50fp"
+        ohos:horizontal_center="true"
+        ohos:top_margin="20vp"/>
 
 </DependentLayout>

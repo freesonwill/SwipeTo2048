@@ -1,9 +1,6 @@
 package com.freesonwill.swipeTo2048.model;
 
 import com.freesonwill.swipeTo2048.model.observable.ObservableField;
-import ohos.abilityshell.HarmonyApplication;
-import ohos.app.dispatcher.TaskDispatcher;
-import ohos.app.dispatcher.task.TaskPriority;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +10,7 @@ public class Board {
     private final int rowCount;
     public ObservableField<Integer> currentScores = new ObservableField<>(0);
     public ObservableField<Boolean> isGameOver = new ObservableField<>(false);
-    public ObservableField<Cell[][]> gridsObservable = new ObservableField<>(null);
+    public ObservableField<Cell[][]> boardObservable = new ObservableField<>(null);
 
     public Board(int rowCount, int columnCount) {
         this.columnCount = columnCount;
@@ -22,32 +19,32 @@ public class Board {
     }
 
     public void init() {
-        Cell[][] grids = gridsObservable.get();
-        if (grids == null) {
-            grids = new Cell[rowCount][columnCount];
-            gridsObservable.set(grids, false);
+        Cell[][] board = boardObservable.get();
+        if (board == null) {
+            board = new Cell[rowCount][columnCount];
+            boardObservable.set(board, false);
         }
-        for (int i = 0; i < grids.length; i++) {
-            for (int j = 0; j < grids[i].length; j++) {
-                if (grids[i][j] == null) grids[i][j] = new Cell(i, j);
-                grids[i][j].value = 0;
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board[i].length; j++) {
+                if (board[i][j] == null) board[i][j] = new Cell(i, j);
+                board[i][j].value = 0;
             }
         }
         this.currentScores.set(0);
-        this.addTwoOrFourToGrids();
-        this.addTwoOrFourToGrids();
-        gridsObservable.set(grids, true);
+        this.addTwoOrFourToBoard();
+        this.addTwoOrFourToBoard();
+        boardObservable.set(board, true);
     }
 
 
-    void addTwoOrFourToGrids() {
-        Cell[][] grids = gridsObservable.get();
+    void addTwoOrFourToBoard() {
+        Cell[][] board = boardObservable.get();
         List<Cell> array = new ArrayList<>();
 
         for (int row = 0; row < rowCount; row++) {
             for (int column = 0; column < columnCount; column++) {
-                if (grids[row][column].value == 0) {
-                    array.add(grids[row][column]);
+                if (board[row][column].value == 0) {
+                    array.add(board[row][column]);
                 }
             }
         }
@@ -59,13 +56,13 @@ public class Board {
         }
     }
 
-    public void swipeGrids(Direction dir) {
-        this.changeGrids(dir);
-        if (!this.isGridsFull()) {
-            this.addTwoOrFourToGrids();
+    public void swipeBoard(Direction dir) {
+        this.changeBoard(dir);
+        if (!this.isBoardFull()) {
+            this.addTwoOrFourToBoard();
             return;
         }
-        if (this.isGridsNotMergeable()) {
+        if (this.isBoardNotMergeable()) {
             gameOver();
             return;
         }
@@ -79,22 +76,22 @@ public class Board {
         isGameOver.set(true);
     }
 
-    void updateCurrentScores(int gridNum) {
-        this.currentScores.set(currentScores.get() + gridNum);
+    void updateCurrentScores(int score) {
+        this.currentScores.set(currentScores.get() + score);
     }
 
-    public void changeGrids(Direction direction) {
-        Cell[][] grids = gridsObservable.get();
+    public void changeBoard(Direction direction) {
+        System.out.println("direction-->" + direction);
+        Cell[][] board = boardObservable.get();
         boolean changed = false;
         if (direction == Direction.LEFT || direction == Direction.RIGHT) {
             final int step = direction == Direction.LEFT ? 1 : -1;
-            int y;
+            int y = direction == Direction.LEFT ? 0 : columnCount - 1;
             for (int row = 0; row < rowCount; row++) {
                 List<Cell> array = new ArrayList<>();
-                y = direction == Direction.LEFT ? 0 : columnCount - 1;
                 for (int i = 0; i < columnCount; i++) {
-                    if (grids[row][i].value != 0) {
-                        array.add(grids[row][y]);
+                    if (board[row][i].value != 0) {
+                        array.add(board[row][y]);
                     }
                     y += step;
                 }
@@ -108,13 +105,16 @@ public class Board {
                     }
                 }
                 int column = direction == Direction.LEFT ? 0 : columnCount - 1;
+                System.out.println("before-->" + Cell.getCellsString(board));
                 for (Cell a : array) {
                     if (a.value != 0) {
-                        grids[row][column].value = a.value;
+                        board[row][column].value = a.value;
+                        a.value = 0;
                         column += step;
                         changed = true;
                     }
                 }
+                System.out.println("end-->" + Cell.getCellsString(board));
             }
         } else if (direction == Direction.UP || direction == Direction.DOWN) {
             final int step = direction == Direction.UP ? 1 : -1;
@@ -123,8 +123,8 @@ public class Board {
                 List<Cell> array = new ArrayList<>();
                 x = direction == Direction.UP ? 0 : rowCount - 1;
                 for (int i = 0; i < columnCount; i++) {
-                    if (grids[x][column].value != 0) {
-                        array.add(grids[x][column]);
+                    if (board[x][column].value != 0) {
+                        array.add(board[x][column]);
                     }
                     x += step;
                 }
@@ -138,23 +138,24 @@ public class Board {
                     }
                 }
                 x = direction == Direction.UP ? 0 : rowCount - 1;
-                for (Cell elem : array) {
-                    if (elem.value != 0) {
-                        grids[x][column].value = elem.value;
+                for (Cell a : array) {
+                    if (a.value != 0) {
+                        board[x][column].value = a.value;
+                        a.value = 0;
                         x += step;
                         changed = true;
                     }
                 }
             }
         }
-        if(changed) gridsObservable.set(grids);
+        if (changed) boardObservable.set(board);
     }
 
-    boolean isGridsFull() { //格子是否满了
-        Cell[][] grids = gridsObservable.get();
+    boolean isBoardFull() { //格子是否满了
+        Cell[][] Board = boardObservable.get();
         for (int row = 0; row < rowCount; row++) {
             for (int column = 0; column < columnCount; column++) {
-                if (grids[row][column].value != 0) {
+                if (Board[row][column].value != 0) {
                     return false;
                 }
             }
@@ -162,17 +163,17 @@ public class Board {
         return true;
     }
 
-    boolean isGridsNotMergeable() {//是否可以合并
-        Cell[][] grids = gridsObservable.get();
+    boolean isBoardNotMergeable() {//是否可以合并
+        Cell[][] Board = boardObservable.get();
         for (int row = 0; row < rowCount; row++) {
             for (int column = 0; column < columnCount; column++) {
                 if (column < columnCount - 1) {
-                    if (grids[row][column].value == grids[row][column + 1].value) {
+                    if (Board[row][column].value == Board[row][column + 1].value) {
                         return false;
                     }
                 }
                 if (row < rowCount - 1) {
-                    if (grids[row][column].value == grids[row + 1][column].value) {
+                    if (Board[row][column].value == Board[row + 1][column].value) {
                         return false;
                     }
                 }
