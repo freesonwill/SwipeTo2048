@@ -2,9 +2,20 @@
 apply plugin: 'com.huawei.ohos.app'
 
 ohos {
-    compileSdkVersion 4
+    signingConfigs {
+        release {
+            storeFile file('E:\\WorkSpace\\Harmony\\Profile\\harmony.p12')
+            storePassword '0000001C068336F580E152A29185BB4CDE8D86D4297EB1E61CF73EBE92B7D127431FEBBED333D7FD46B3EAA4'
+            keyAlias = 'harmony'
+            keyPassword '0000001C46A6116641FC76D234934C9D344B7D03CFC774B47BDC545B24AEC4F1236AF837EA99E5875DBA1DE3'
+            signAlg = 'SHA256withECDSA'
+            profile file('E:\\WorkSpace\\Harmony\\Profile\\harmony-release.p7b')
+            certpath file('E:\\WorkSpace\\Harmony\\Profile\\harmony-release.cer')
+        }
+    }
+    compileSdkVersion 5
     defaultConfig {
-        compatibleSdkVersion 3
+        compatibleSdkVersion 4
     }
 }
 
@@ -19,7 +30,8 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.huawei.ohos:hap:2.4.1.4'
+        classpath 'com.huawei.ohos:hap:2.4.2.5'
+        classpath 'com.huawei.ohos:decctest:1.0.0.6'
     }
 }
 

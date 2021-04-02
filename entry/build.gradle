@@ -1,20 +1,29 @@
 apply plugin: 'com.huawei.ohos.hap'
 ohos {
-    compileSdkVersion 4
-    defaultConfig {
-        compatibleSdkVersion 3
+    signingConfigs {
+        debug {
+            storeFile file('E:\\WorkSpace\\Harmony\\Profile\\harmony.p12')
+            storePassword '0000001C5351488917073712AED64A0D1CA21904436171A4167AD48C634355641079D818D5B91C5F23A5AC75'
+            keyAlias = 'harmony'
+            keyPassword '0000001C03DEF5C2077249D0AF768935C31130A9C47AD08F49F33C905EE8C84888F64A7C6D51D46692D4E42E'
+            signAlg = 'SHA256withECDSA'
+            profile file('E:\\WorkSpace\\Harmony\\Profile\\harmony-debug.p7b')
+            certpath file('E:\\WorkSpace\\Harmony\\Profile\\harmony-debug.cer')
+        }
+        release {
+            storeFile file('E:\\WorkSpace\\Harmony\\Profile\\harmony.p12')
+            storePassword '0000001C7D73B4D28E0687D97F160D596056A57BB2D38DEDC49D15537EE2D5432B05E7113559F40A1D6F6F41'
+            keyAlias = 'harmony'
+            keyPassword '0000001C946AE034F4F83534C48CDB4DCBED142D5E4A1079D2194CAC5C147D7D9FE889EBAF0B805CD5DD335E'
+            signAlg = 'SHA256withECDSA'
+            profile file('E:\\WorkSpace\\Harmony\\Profile\\harmony-release.p7b')
+            certpath file('E:\\WorkSpace\\Harmony\\Profile\\harmony-release.cer')
+        }
     }
-//    signingConfigs {
-//        release {
-//            storeFile file('E:/Harmony/Profile/harmony.p12')
-//            storePassword 'hongmong2021'
-//            keyAlias 'harmony'
-//            keyPassword 'hongmong2021'
-//            signAlg 'SHA256withECDSA'
-//            profile file('E:/Harmony/Profile/harmony-release.p7b')
-//            certpath file('E:/Harmony/Profile/harmony.cer')
-//        }
-//    }
+    compileSdkVersion 5
+    defaultConfig {
+        compatibleSdkVersion 4
+    }
 }
 
 dependencies {
